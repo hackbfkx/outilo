@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outilo — Tes outils gratuits</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #0f1117;
+    color: white;
+    min-height: 100vh;
+}
+
+header {
+    padding: 25px;
+    text-align: center;
+    background: #171a23;
+    border-bottom: 1px solid #292e3b;
+}
+
+header h1 {
+    font-size: 34px;
+}
+
+header p {
+    color: #aeb4c2;
+    margin-top: 8px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px;
+}
+
+.search {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid #303645;
+    background: #191d27;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.category {
+    padding: 14px;
+    border: 1px solid #303645;
+    background: #191d27;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.category:hover {
+    background: #252b38;
+}
+
+.tools {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+}
+
+.tool {
+    background: #191d27;
+    border: 1px solid #303645;
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.tool:hover {
+    transform: translateY(-3px);
+    background: #202532;
+}
+
+.tool h3 {
+    margin-bottom: 8px;
+}
+
+.tool p {
+    color: #9fa6b5;
+    font-size: 14px;
+}
+
+.icon {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.panel {
+    display: none;
+    background: #191d27;
+    border: 1px solid #303645;
+    border-radius: 16px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.panel.active {
+    display: block;
+}
+
+.panel h2 {
+    margin-bottom: 20px;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 6px 0 12px;
+    background: #0f1117;
+    border: 1px solid #353b4a;
+    color: white;
+    border-radius: 9px;
+}
+
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
+
+button {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 9px;
+    background: #5865f2;
+    color: white;
+    cursor: pointer;
+    margin: 4px;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: .85;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #10131a;
+    border: 1px solid #303645;
+    white-space: pre-wrap;
+}
+
+.back {
+    background: #303645;
+}
+
+.big-number {
+    font-size: 40px;
+    text-align: center;
+    margin: 20px;
+}
+
+.timer {
+    font-size: 60px;
+    text-align: center;
+    margin: 20px;
+}
+
+.quiz-question {
+    padding: 15px;
+    margin: 10px 0;
+    background: #10131a;
+    border-radius: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 40px;
+    color: #777f90;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🛠️ Outilo</h1>
+    <p>Tous tes outils gratuits, sans compte.</p>
+</header>
+
+<div class="container">
+
+<input
+    class="search"
+    id="search"
+    placeholder="🔎 Rechercher un outil..."
+    oninput="searchTools()"
+>
+
+<div class="categories">
+    <button class="category" onclick="filterTools('all')">🏠 Tous</button>
+    <button class="category" onclick="filterTools('calcul')">🧮 Calculs</button>
+    <button class="category" onclick="filterTools('school')">📚 École</button>
+    <button class="category" onclick="filterTools('convert')">🔄 Conversion</button>
+    <button class="category" onclick="filterTools('time')">⏱️ Temps</button>
+    <button class="category" onclick="filterTools('random')">🎲 Générateurs</button>
+    <button class="category" onclick="filterTools('gaming')">🎮 Gaming</button>
+</div>
+
+<div class="tools" id="tools">
+
+    <div class="tool" data-category="calcul" data-name="calculatrice" onclick="openTool('calculator')">
+        <div class="icon">🧮</div>
+        <h3>Calculatrice</h3>
+        <p>Effectue rapidement tes calculs.</p>
+    </div>
+
+    <div class="tool" data-category="calcul" data-name="pourcentage" onclick="openTool('percentage')">
+        <div class="icon">📊</div>
+        <h3>Pourcentage</h3>
+        <p>Calculer un pourcentage facilement.</p>
+    </div>
+
+    <div class="tool" data-category="calcul" data-name="moyenne" onclick="openTool('average')">
+        <div class="icon">📈</div>
+        <h3>Moyenne</h3>
+        <p>Calculer une moyenne.</p>
+    </div>
+
+    <div class="tool" data-category="calcul" data-name="regle de trois" onclick="openTool('rule3')">
+        <div class="icon">📐</div>
+        <h3>Règle de trois</h3>
+        <p>Résous une proportion.</p>
+    </div>
+
+    <div class="tool" data-category="calcul" data-name="vitesse distance temps" onclick="openTool('speed')">
+        <div class="icon">🚗</div>
+        <h3>Vitesse / Distance / Temps</h3>
+        <p>Calcule vitesse, distance ou durée.</p>
+    </div>
+
+    <div class="tool" data-category="convert" data-name="conversion longueur" onclick="openTool('length')">
+        <div class="icon">📏</div>
+        <h3>Convertisseur de longueur</h3>
+        <p>m, km, cm, mm...</p>
+    </div>
+
+    <div class="tool" data-category="convert" data-name="conversion vitesse" onclick="openTool('speedconvert')">
+        <div class="icon">💨</div>
+        <h3>km/h ↔ m/s</h3>
+        <p>Convertis les vitesses.</p>
+    </div>
+
+    <div class="tool" data-category="time" data-name="chronometre" onclick="openTool('stopwatch')">
+        <div class="icon">⏱️</div>
+        <h3>Chronomètre</h3>
+        <p>Chronomètre simple.</p>
+    </div>
+
+    <div class="tool" data-category="time" data-name="compte a rebours" onclick="openTool('countdown')">
+        <div class="icon">⌛</div>
+        <h3>Compte à rebours</h3>
+        <p>Lance un timer.</p>
+    </div>
+
+    <div class="tool" data-category="school" data-name="fiche revision" onclick="openTool('revision')">
+        <div class="icon">📚</div>
+        <h3>Fiche de révision</h3>
+        <p>Crée une fiche à partir de tes informations.</p>
+    </div>
+
+    <div class="tool" data-category="school" data-name="flashcards" onclick="openTool('flashcards')">
+        <div class="icon">🧠</div>
+        <h3>Flashcards</h3>
+        <p>Crée tes cartes de révision.</p>
+    </div>
+
+    <div class="tool" data-category="school" data-name="quiz" onclick="openTool('quiz')">
+        <div class="icon">❓</div>
+        <h3>Quiz</h3>
+        <p>Crée un petit quiz.</p>
+    </div>
+
+    <div class="tool" data-category="random" data-name="nombre aleatoire" onclick="openTool('random')">
+        <div class="icon">🔢</div>
+        <h3>Nombre aléatoire</h3>
+        <p>Génère un nombre.</p>
+    </div>
+
+    <div class="tool" data-category="random" data-name="tirage au sort" onclick="openTool('draw')">
+        <div class="icon">🎲</div>
+        <h3>Tirage au sort</h3>
+        <p>Choisis au hasard.</p>
+    </div>
+
+    <div class="tool" data-category="random" data-name="generateur pseudo" onclick="openTool('username')">
+        <div class="icon">👤</div>
+        <h3>Générateur de pseudo</h3>
+        <p>Crée un pseudo aléatoire.</p>
+    </div>
+
+    <div class="tool" data-category="random" data-name="mot de passe" onclick="openTool('password')">
+        <div class="icon">🔐</div>
+        <h3>Mot de passe</h3>
+        <p>Génère un mot de passe aléatoire.</p>
+    </div>
+
+    <div class="tool" data-category="gaming" data-name="sensibilite gaming dpi" onclick="openTool('dpi')">
+        <div class="icon">🎮</div>
+        <h3>Calculateur DPI</h3>
+        <p>Calcule une sensibilité eDPI.</p>
+    </div>
+
+</div>
+
+
+<!-- PANELS -->
+
+<div id="calculator" class="panel">
+<h2>🧮 Calculatrice</h2>
+
+<input id="calcInput" placeholder="Exemple : 25 * 4 + 10">
+
+<button onclick="calculate()">Calculer</button>
+
+<div id="calcResult" class="result"></div>
+</div>
+
+
+<div id="percentage" class="panel">
+<h2>📊 Pourcentage</h2>
+
+<input id="percentNumber" type="number" placeholder="Nombre">
+<input id="percentValue" type="number" placeholder="Pourcentage">
+
+<button onclick="percentage()">Calculer</button>
+
+<div id="percentResult" class="result"></div>
+</div>
+
+
+<div id="average" class="panel">
+<h2>📈 Moyenne</h2>
+
+<input id="numbers" placeholder="Exemple : 12, 15, 18, 14">
+
+<button onclick="average()">Calculer</button>
+
+<div id="averageResult" class="result"></div>
+</div>
+
+
+<div id="rule3" class="panel">
+<h2>📐 Règle de trois</h2>
+
+<p>A correspond à B. C correspond à X.</p>
+
+<input id="a" type="number" placeholder="A">
+<input id="b" type="number" placeholder="B">
+<input id="c" type="number" placeholder="C">
+
+<button onclick="rule3()">Calculer X</button>
+
+<div id="ruleResult" class="result"></div>
+</div>
+
+
+<div id="speed" class="panel">
+<h2>🚗 Vitesse / Distance / Temps</h2>
+
+<select id="speedMode">
+<option value="speed">Calculer la vitesse</option>
+<option value="distance">Calculer la distance</option>
+<option value="time">Calculer le temps</option>
+</select>
+
+<input id="speedDistance" type="number" placeholder="Distance en km">
+<input id="speedTime" type="number" placeholder="Temps en heures">
+<input id="speedValue" type="number" placeholder="Vitesse en km/h">
+
+<button onclick="speedCalc()">Calculer</button>
+
+<div id="speedResult" class="result"></div>
+</div>
+
+
+<div id="length" class="panel">
+<h2>📏 Convertisseur de longueur</h2>
+
+<input id="lengthValue" type="number" placeholder="Valeur">
+
+<select id="lengthFrom">
+<option value="mm">Millimètres</option>
+<option value="cm">Centimètres</option>
+<option value="m">Mètres</option>
+<option value="km">Kilomètres</option>
+</select>
+
+<select id="lengthTo">
+<option value="mm">Millimètres</option>
+<option value="cm">Centimètres</option>
+<option value="m">Mètres</option>
+<option value="km">Kilomètres</option>
+</select>
+
+<button onclick="convertLength()">Convertir</button>
+
+<div id="lengthResult" class="result"></div>
+</div>
+
+
+<div id="speedconvert" class="panel">
+<h2>💨 km/h ↔ m/s</h2>
+
+<input id="speedConvertValue" type="number" placeholder="Valeur">
+
+<select id="speedConvertType">
+<option value="kmms">km/h → m/s</option>
+<option value="mskm">m/s → km/h</option>
+</select>
+
+<button onclick="convertSpeed()">Convertir</button>
+
+<div id="speedConvertResult" class="result"></div>
+</div>
+
+
+<div id="stopwatch" class="panel">
+<h2>⏱️ Chronomètre</h2>
+
+<div id="stopwatchDisplay" class="timer">00:00:00</div>
+
+<button onclick="startStopwatch()">▶️ Démarrer</button>
+<button onclick="stopStopwatch()">⏸️ Pause</button>
+<button onclick="resetStopwatch()">🔄 Reset</button>
+</div>
+
+
+<div id="countdown" class="panel">
+<h2>⌛ Compte à rebours</h2>
+
+<input id="countMinutes" type="number" placeholder="Minutes">
+
+<div id="countDisplay" class="timer">00:00</div>
+
+<button onclick="startCountdown()">▶️ Démarrer</button>
+<button onclick="stopCountdown()">⏸️ Pause</button>
+</div>
+
+
+<div id="revision" class="panel">
+<h2>📚 Générateur de fiche de révision</h2>
+
+<input id="revisionTitle" placeholder="Titre de la fiche">
+<input id="revisionSubject" placeholder="Matière">
+<input id="revisionLevel" placeholder="Niveau">
+<textarea id="revisionContent" placeholder="Colle ici ton cours ou tes informations..."></textarea>
+
+<button onclick="createRevision()">✨ Générer la fiche</button>
+
+<div id="revisionResult" class="result"></div>
+</div>
+
+
+<div id="flashcards" class="panel">
+<h2>🧠 Flashcards</h2>
+
+<input id="questionCard" placeholder="Question">
+<input id="answerCard" placeholder="Réponse">
+
+<button onclick="addCard()">Ajouter</button>
+
+<div id="cardsResult" class="result"></div>
+</div>
+
+
+<div id="quiz" class="panel">
+<h2>❓ Créateur de quiz</h2>
+
+<input id="quizQuestion" placeholder="Question">
+<input id="quizAnswer" placeholder="Bonne réponse">
+
+<button onclick="addQuiz()">Ajouter la question</button>
+<button onclick="showQuiz()">Afficher le quiz</button>
+
+<div id="quizResult" class="result"></div>
+</div>
+
+
+<div id="random" class="panel">
+<h2>🔢 Nombre aléatoire</h2>
+
+<input id="randomMin" type="number" placeholder="Minimum">
+<input id="randomMax" type="number" placeholder="Maximum">
+
+<button onclick="randomNumber()">Générer</button>
+
+<div id="randomResult" class="big-number"></div>
+</div>
+
+
+<div id="draw" class="panel">
+<h2>🎲 Tirage au sort</h2>
+
+<textarea id="drawItems" placeholder="Écris un choix par ligne..."></textarea>
+
+<button onclick="drawWinner()">Tirer au sort</button>
+
+<div id="drawResult" class="big-number"></div>
+</div>
+
+
+<div id="username" class="panel">
+<h2>👤 Générateur de pseudo</h2>
+
+<button onclick="generateUsername()">Générer un pseudo</button>
+
+<div id="usernameResult" class="big-number"></div>
+</div>
+
+
+<div id="password" class="panel">
+<h2>🔐 Générateur de mot de passe</h2>
+
+<input id="passwordLength" type="number" value="16" min="4" max="100">
+
+<button onclick="generatePassword()">Générer</button>
+
+<div id="passwordResult" class="result"></div>
+</div>
+
+
+<div id="dpi" class="panel">
+<h2>🎮 Calculateur eDPI</h2>
+
+<input id="dpiValue" type="number" placeholder="DPI">
+<input id="sensValue" type="number" step="0.01" placeholder="Sensibilité">
+
+<button onclick="calculateDPI()">Calculer eDPI</button>
+
+<div id="dpiResult" class="result"></div>
+</div>
+
+
+<div style="text-align:center;margin-top:20px;">
+<button class="back" onclick="closePanels()">⬅️ Retour aux outils</button>
+</div>
+
+</div>
+
+<footer>
+    Outilo © 2026 — Gratuit • Sans compte • Fonctionne dans ton navigateur
+</footer>
+
+
+<script>
+
+/* NAVIGATION */
+
+function openTool(id) {
+    document.querySelectorAll(".panel").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    window.scrollTo({
+        top: document.getElementById(id).offsetTop - 20,
+        behavior: "smooth"
+    });
+}
+
+function closePanels() {
+    document.querySelectorAll(".panel").forEach(p => {
+        p.classList.remove("active");
+    });
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* RECHERCHE */
+
+function searchTools() {
+
+    const search = document
+        .getElementById("search")
+        .value
+        .toLowerCase();
+
+    document.querySelectorAll(".tool").forEach(tool => {
+
+        const name = tool.dataset.name.toLowerCase();
+
+        tool.style.display =
+            name.includes(search) ? "block" : "none";
+    });
+}
+
+
+/* FILTRES */
+
+function filterTools(category) {
+
+    document.querySelectorAll(".tool").forEach(tool => {
+
+        if(category === "all") {
+            tool.style.display = "block";
+        } else {
+            tool.style.display =
+                tool.dataset.category === category
+                ? "block"
+                : "none";
+        }
+
+    });
+}
+
+
+/* CALCULATRICE */
+
+function calculate() {
+
+    const input =
+        document.getElementById("calcInput").value;
+
+    try {
+
+        const result = Function(
+            '"use strict"; return (' + input + ')'
+        )();
+
+        document.getElementById("calcResult").textContent =
+            "Résultat : " + result;
+
+    } catch {
+
+        document.getElementById("calcResult").textContent =
+            "Calcul invalide.";
+
+    }
+}
+
+
+/* POURCENTAGE */
+
+function percentage() {
+
+    const number =
+        Number(document.getElementById("percentNumber").value);
+
+    const percent =
+        Number(document.getElementById("percentValue").value);
+
+    const result = number * percent / 100;
+
+    document.getElementById("percentResult").textContent =
+        percent + "% de " + number + " = " + result;
+}
+
+
+/* MOYENNE */
+
+function average() {
+
+    const values =
+        document.getElementById("numbers")
+        .value
+        .split(",")
+        .map(Number)
+        .filter(n => !isNaN(n));
+
+    if(!values.length) return;
+
+    const total =
+        values.reduce((a,b) => a+b, 0);
+
+    const result =
+        total / values.length;
+
+    document.getElementById("averageResult").textContent =
+        "Moyenne : " + result.toFixed(2);
+}
+
+
+/* REGLE DE TROIS */
+
+function rule3() {
+
+    const a = Number(document.getElementById("a").value);
+    const b = Number(document.getElementById("b").value);
+    const c = Number(document.getElementById("c").value);
+
+    if(a === 0) return;
+
+    const x = b * c / a;
+
+    document.getElementById("ruleResult").textContent =
+        "X = " + x;
+}
+
+
+/* VITESSE */
+
+function speedCalc() {
+
+    const mode =
+        document.getElementById("speedMode").value;
+
+    const distance =
+        Number(document.getElementById("speedDistance").value);
+
+    const time =
+        Number(document.getElementById("speedTime").value);
+
+    const speed =
+        Number(document.getElementById("speedValue").value);
+
+    let result;
+
+    if(mode === "speed") {
+
+        result =
+            "Vitesse = " +
+            (distance / time).toFixed(2) +
+            " km/h";
+
+    }
+
+    if(mode === "distance") {
+
+        result =
+            "Distance = " +
+            (speed * time).toFixed(2) +
+            " km";
+
+    }
+
+    if(mode === "time") {
+
+        result =
+            "Temps = " +
+            (distance / speed).toFixed(2) +
+            " heures";
+
+    }
+
+    document.getElementById("speedResult").textContent =
+        result;
+}
+
+
+/* LONGUEURS */
+
+function convertLength() {
+
+    const value =
+        Number(document.getElementById("lengthValue").value);
+
+    const from =
+        document.getElementById("lengthFrom").value;
+
+    const to =
+        document.getElementById("lengthTo").value;
+
+    const units = {
+        mm: 0.001,
+        cm: 0.01,
+        m: 1,
+        km: 1000
+    };
+
+    const meters =
+        value * units[from];
+
+    const result =
+        meters / units[to];
+
+    document.getElementById("lengthResult").textContent =
+        result + " " + to;
+}
+
+
+/* VITESSE CONVERSION */
+
+function convertSpeed() {
+
+    const value =
+        Number(document.getElementById("speedConvertValue").value);
+
+    const type =
+        document.getElementById("speedConvertType").value;
+
+    let result;
+
+    if(type === "kmms") {
+        result = value / 3.6;
+        document.getElementById("speedConvertResult").textContent =
+            result.toFixed(2) + " m/s";
+    } else {
+        result = value * 3.6;
+        document.getElementById("speedConvertResult").textContent =
+            result.toFixed(2) + " km/h";
+    }
+}
+
+
+/* CHRONOMETRE */
+
+let stopwatchSeconds = 0;
+let stopwatchInterval = null;
+
+function updateStopwatch() {
+
+    stopwatchSeconds++;
+
+    const h =
+        Math.floor(stopwatchSeconds / 3600);
+
+    const m =
+        Math.floor((stopwatchSeconds % 3600) / 60);
+
+    const s =
+        stopwatchSeconds % 60;
+
+    document.getElementById("stopwatchDisplay").textContent =
+        String(h).padStart(2,"0") + ":" +
+        String(m).padStart(2,"0") + ":" +
+        String(s).padStart(2,"0");
+}
+
+function startStopwatch() {
+
+    if(stopwatchInterval) return;
+
+    stopwatchInterval =
+        setInterval(updateStopwatch,1000);
+}
+
+function stopStopwatch() {
+
+    clearInterval(stopwatchInterval);
+    stopwatchInterval = null;
+}
+
+function resetStopwatch() {
+
+    stopStopwatch();
+
+    stopwatchSeconds = 0;
+
+    document.getElementById("stopwatchDisplay").textContent =
+        "00:00:00";
+}
+
+
+/* COMPTE A REBOURS */
+
+let countdownSeconds = 0;
+let countdownInterval = null;
+
+function startCountdown() {
+
+    if(countdownInterval) return;
+
+    const input =
+        Number(document.getElementById("countMinutes").value);
+
+    if(countdownSeconds === 0) {
+        countdownSeconds = input * 60;
+    }
+
+    countdownInterval =
+        setInterval(() => {
+
+            if(countdownSeconds <= 0) {
+
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+
+                document.getElementById("countDisplay").textContent =
+                    "00:00";
+
+                alert("⏰ Temps écoulé !");
+                return;
+            }
+
+            countdownSeconds--;
+
+            const min =
+                Math.floor(countdownSeconds / 60);
+
+            const sec =
+                countdownSeconds % 60;
+
+            document.getElementById("countDisplay").textContent =
+                String(min).padStart(2,"0") +
+                ":" +
+                String(sec).padStart(2,"0");
+
+        },1000);
+}
+
+function stopCountdown() {
+
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+}
+
+
+/* FICHE DE REVISION */
+
+function createRevision() {
+
+    const title =
+        document.getElementById("revisionTitle").value;
+
+    const subject =
+        document.getElementById("revisionSubject").value;
+
+    const level =
+        document.getElementById("revisionLevel").value;
+
+    const content =
+        document.getElementById("revisionContent").value;
+
+    const result = `
+📚 ${title}
+
+Matière : ${subject}
+Niveau : ${level}
+
+━━━━━━━━━━━━━━━━━━
+
+📝 À RETENIR
+
+${content}
+
+━━━━━━━━━━━━━━━━━━
+
+💡 CONSEIL
+
+Relis les informations importantes puis essaie
+de les expliquer sans regarder ton cours.
+`;
+
+    document.getElementById("revisionResult").textContent =
+        result;
+}
+
+
+/* FLASHCARDS */
+
+let cards = [];
+
+function addCard() {
+
+    const question =
+        document.getElementById("questionCard").value;
+
+    const answer =
+        document.getElementById("answerCard").value;
+
+    if(!question || !answer) return;
+
+    cards.push({
+        question,
+        answer
+    });
+
+    document.getElementById("questionCard").value = "";
+    document.getElementById("answerCard").value = "";
+
+    displayCards();
+}
+
+function displayCards() {
+
+    const container =
+        document.getElementById("cardsResult");
+
+    container.innerHTML = "";
+
+    cards.forEach((card,index) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "quiz-question";
+
+        div.innerHTML = `
+            <strong>Carte ${index + 1}</strong><br><br>
+            ${card.question}
+            <br><br>
+            <button onclick="alert('${card.answer.replace(/'/g,"\\'")}')">
+                Voir la réponse
+            </button>
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+
+/* QUIZ */
+
+let quizQuestions = [];
+
+function addQuiz() {
+
+    const question =
+        document.getElementById("quizQuestion").value;
+
+    const answer =
+        document.getElementById("quizAnswer").value;
+
+    if(!question || !answer) return;
+
+    quizQuestions.push({
+        question,
+        answer
+    });
+
+    document.getElementById("quizQuestion").value = "";
+    document.getElementById("quizAnswer").value = "";
+
+    document.getElementById("quizResult").textContent =
+        quizQuestions.length +
+        " question(s) ajoutée(s).";
+}
+
+function showQuiz() {
+
+    const result =
+        document.getElementById("quizResult");
+
+    result.innerHTML = "";
+
+    quizQuestions.forEach((q,i) => {
+
+        const div =
+            document.createElement("div");
+
+        div.className = "quiz-question";
+
+        div.innerHTML = `
+            <strong>${i+1}. ${q.question}</strong>
+            <br><br>
+            <button onclick="this.nextElementSibling.style.display='block'">
+                Voir la réponse
+            </button>
+            <p style="display:none;margin-top:10px">
+                ✅ ${q.answer}
+            </p>
+        `;
+
+        result.appendChild(div);
+    });
+}
+
+
+/* NOMBRE ALEATOIRE */
+
+function randomNumber() {
+
+    const min =
+        Number(document.getElementById("randomMin").value);
+
+    const max =
+        Number(document.getElementById("randomMax").value);
+
+    const number =
+        Math.floor(Math.random() * (max - min + 1)) + min;
+
+    document.getElementById("randomResult").textContent =
+        number;
+}
+
+
+/* TIRAGE */
+
+function drawWinner() {
+
+    const items =
+        document.getElementById("drawItems")
+        .value
+        .split("\n")
+        .map(x => x.trim())
+        .filter(Boolean);
+
+    if(!items.length) return;
+
+    const winner =
+        items[Math.floor(Math.random() * items.length)];
+
+    document.getElementById("drawResult").textContent =
+        "🎉 " + winner;
+}
+
+
+/* PSEUDO */
+
+function generateUsername() {
+
+    const words1 = [
+        "Dark","Fast","Crazy","Shadow",
+        "Epic","Turbo","Ghost","Ultra",
+        "Red","Blue","Silent","Cyber"
+    ];
+
+    const words2 = [
+        "Wolf","Racer","Gamer","Fox",
+        "Pilot","Storm","Hunter","Legend",
+        "Drift","Knight","Fire","Speed"
+    ];
+
+    const username =
+        words1[Math.floor(Math.random()*words1.length)] +
+        words2[Math.floor(Math.random()*words2.length)] +
+        Math.floor(Math.random()*999);
+
+    document.getElementById("usernameResult").textContent =
+        username;
+}
+
+
+/* MOT DE PASSE */
+
+function generatePassword() {
+
+    const length =
+        Number(document.getElementById("passwordLength").value);
+
+    const chars =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+
+    let password = "";
+
+    for(let i=0;i<length;i++) {
+
+        password +=
+            chars[Math.floor(Math.random()*chars.length)];
+    }
+
+    document.getElementById("passwordResult").textContent =
+        password;
+}
+
+
+/* DPI */
+
+function calculateDPI() {
+
+    const dpi =
+        Number(document.getElementById("dpiValue").value);
+
+    const sens =
+        Number(document.getElementById("sensValue").value);
+
+    const result =
+        dpi * sens;
+
+    document.getElementById("dpiResult").textContent =
+        "eDPI = " + result;
+}
+
+</script>
+
+</body>
+</html>
